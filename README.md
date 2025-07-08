@@ -1,16 +1,17 @@
 # Node.js Express Server
 
-A complete Express.js server with CORS handling, JSON parsing, database integration, and API routes.
+A Node.js Express server with authentication system, database integration, and RESTful API structure.
 
 ## Features
 
 - ✅ **Express Server** - Fast and minimal web framework
 - ✅ **CORS Handling** - Cross-Origin Resource Sharing support
-- ✅ **JSON Parser** - Built-in JSON body parsing
+- ✅ **JSON Parser** - Built-in JSON body parsing with size limits
 - ✅ **Database Integration** - PostgreSQL with Sequelize ORM
-- ✅ **API Routes** - RESTful API endpoints
+- ✅ **Authentication System** - Login, register, logout, password reset
 - ✅ **Error Handling** - Global error handling middleware
 - ✅ **Environment Configuration** - dotenv support
+- ✅ **Graceful Shutdown** - Proper cleanup on server termination
 
 ## Quick Start
 
@@ -37,47 +38,28 @@ A complete Express.js server with CORS handling, JSON parsing, database integrat
    ```
 
 4. **Test the Server**
+
    ```bash
    # Check if server is running
-   curl http://localhost:3000/health
-   
-   # Test main API endpoint
-   curl http://localhost:3000/api
+   curl http://localhost:3000/
+
+   # Test authentication endpoints
+   curl -X POST http://localhost:3000/api/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test123"}'
    ```
 
 ## API Endpoints
 
 ### Main Endpoints
-- `GET /health` - Health check endpoint
-- `GET /api` - Main API endpoint with server info
 
-### Authentication Routes (`/api/auth`)
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/forgot-password` - Forgot password
-- `POST /api/auth/reset-password` - Reset password
+- `GET /` - Server status and health check
 
-### User Management (`/api/users`)
-- `GET /api/users` - Get all users
-- `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create new user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
+### Authentication Routes (`/api`)
 
-### Role Management (`/api/roles`)
-- `GET /api/roles` - Get all roles
-- `GET /api/roles/:id` - Get role by ID
-- `POST /api/roles` - Create new role
-- `PUT /api/roles/:id` - Update role
-- `DELETE /api/roles/:id` - Delete role
-
-### Permission Management (`/api/permissions`)
-- `GET /api/permissions` - Get all permissions
-- `GET /api/permissions/:id` - Get permission by ID
-- `POST /api/permissions` - Create new permission
-- `PUT /api/permissions/:id` - Update permission
-- `DELETE /api/permissions/:id` - Delete permission
+- `POST /api/login` - User login
+- `POST /api/register` - User registration
+- `POST /api/logout` - User logout
+- `POST /api/forgot-password` - Forgot password
+- `POST /api/reset-password` - Reset password
 
 ## Configuration
 
@@ -93,8 +75,8 @@ NODE_ENV=development
 # Database Configuration
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 
-# CORS Configuration (comma-separated URLs)
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:5173
+# CORS Configuration
+ALLOWED_ORIGINS=*
 
 # JWT Configuration
 JWT_SECRET=your_jwt_secret_key_here
@@ -106,33 +88,40 @@ HASH_SALT_ROUNDS=10
 
 ### CORS Configuration
 
-The server is configured to handle CORS automatically. You can customize allowed origins in the `.env` file:
-
-```env
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,https://yourdomain.com
-```
+The server is configured to handle CORS automatically. By default, it allows all origins (`*`). You can customize allowed origins in the `.env` file.
 
 ## Database Integration
 
 The server uses Sequelize ORM with PostgreSQL. The database connection is established asynchronously when the server starts.
 
-### Database Connection Features:
+### Database Connection Features
+
 - ✅ **Automatic reconnection** - Handles connection drops
-- ✅ **Connection pooling** - Optimized for performance
+- ✅ **Connection pooling** - Optimized for performance  
 - ✅ **Error handling** - Graceful error handling
 - ✅ **Environment-based logging** - Detailed logs in development
+- ✅ **Model synchronization** - Auto-sync in development mode
 
 ## Server Response Format
 
-All API endpoints return responses in this format:
+The server returns responses in different formats depending on the endpoint:
 
+**Root endpoint (`/`):**
 ```json
 {
-  "success": true,
-  "message": "Response message",
-  "data": {}, // Optional data payload
-  "timestamp": "2025-07-07T12:55:17.838Z",
-  "endpoint": "/api/endpoint"
+  "type": "success",
+  "message": "Server Started on Port: 3000",
+  "timestamp": "2025-07-08T12:55:17.838Z",
+  "status": "running"
+}
+```
+
+**Error responses:**
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "path": "/requested/path"
 }
 ```
 
@@ -159,19 +148,25 @@ The server includes comprehensive error handling:
 │   └── index.js
 ├── controllers/
 │   ├── auth.controller.js   # Authentication logic
-│   ├── user.controller.js   # User management logic
-│   ├── role.controller.js   # Role management logic
-│   └── permission.controller.js
+│   ├── user.controller.js   # User management logic (placeholder)
+│   ├── role.controller.js   # Role management logic (placeholder)
+│   └── permission.controller.js # Permission logic (placeholder)
 ├── routes/
-│   ├── auth.routes.js       # Authentication routes
-│   ├── user.routes.js       # User routes
-│   ├── role.routes.js       # Role routes
-│   └── permission.routes.js # Permission routes
+│   ├── auth.routes.js       # Authentication routes (implemented)
+│   ├── user.routes.js       # User routes (placeholder)
+│   ├── role.routes.js       # Role routes (placeholder)
+│   ├── permission.routes.js # Permission routes (placeholder)
+│   └── index.js            # Main routes file
 ├── middlewares/
 │   └── auth.middleware.js   # Authentication middleware
 ├── models/                  # Database models
 ├── utils/                   # Utility functions
-├── index.js                 # Main server file
+│   ├── hash.js             # Password hashing utilities
+│   ├── jwt.js              # JWT utilities
+│   └── validations/        # Input validation schemas
+├── .env.example            # Environment variables template
+├── index.js                # Main server file
+├── test-connection.js      # Database connection test
 └── package.json
 ```
 
@@ -179,27 +174,34 @@ The server includes comprehensive error handling:
 
 To extend the server:
 
-1. **Add new routes** in the `routes/` directory
-2. **Add business logic** in the `controllers/` directory
+1. **Add new routes** in the `routes/` directory and register them in `routes/index.js`
+2. **Add business logic** in the `controllers/` directory  
 3. **Add database models** in the `models/` directory
 4. **Add middleware** in the `middlewares/` directory
+5. **Add validations** in the `utils/validations/` directory
+
+Currently implemented:
+
+- ✅ Authentication routes and controllers
+- 🔄 User, role, and permission routes (placeholder files exist)
 
 ## Testing
 
 You can test the API endpoints using:
 
-- **curl** (Linux/Mac)
-- **Invoke-RestMethod** (PowerShell)
+- **curl** (Cross-platform)
+- **Invoke-RestMethod** (PowerShell)  
 - **Postman** or similar API testing tools
 - **VS Code REST Client** extension
 
 Example:
-```bash
-# Test main API endpoint
-curl http://localhost:3000/api
 
-# Test login endpoint
-curl -X POST http://localhost:3000/api/auth/login \
+```bash
+# Test server status
+curl http://localhost:3000/
+
+# Test login endpoint  
+curl -X POST http://localhost:3000/api/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"test123"}'
 ```
@@ -210,12 +212,12 @@ For production deployment:
 
 1. Set `NODE_ENV=production` in your environment
 2. Use a process manager like PM2
-3. Set up proper database credentials
+3. Set up proper database credentials  
 4. Configure HTTPS
 5. Set up monitoring and logging
 
 ---
 
-**Server Status**: ✅ Running on http://localhost:3000
+**Server Status**: ✅ Running on <http://localhost:3000>
 
-**API Documentation**: Available at http://localhost:3000/api
+**API Base URL**: <http://localhost:3000/api>
