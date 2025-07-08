@@ -12,6 +12,9 @@ A Node.js Express server with authentication system, database integration, and R
 - ✅ **Error Handling** - Global error handling middleware
 - ✅ **Environment Configuration** - dotenv support
 - ✅ **Graceful Shutdown** - Proper cleanup on server termination
+- ✅ **Code Quality** - ESLint + Prettier integration
+- ✅ **Git Hooks** - Husky for pre-commit linting and commit message validation
+- ✅ **Commit Standards** - Conventional commits with commitlint
 
 ## Quick Start
 
@@ -139,10 +142,82 @@ The server includes comprehensive error handling:
 - `npm start` - Start the server in production mode
 - `npm run dev` - Start the server in development mode with auto-restart
 - `npm run test-db` - Test database connection
+- `npm run lint` - Run ESLint to check code quality
+- `npm run lint:fix` - Run ESLint and automatically fix issues
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check if code is properly formatted
+
+## Code Quality & Development Tools
+
+### ESLint Configuration
+
+The project uses ESLint v9 with the new flat config format (`eslint.config.js`):
+
+- ✅ **ES2021+ Standards** - Modern JavaScript syntax support
+- ✅ **Node.js Environment** - Proper globals and rules for Node.js
+- ✅ **Custom Rules** - Tailored rules for this project
+- ✅ **Auto-fix** - Many issues can be automatically fixed
+
+### Prettier Configuration
+
+Code formatting is handled by Prettier with the following settings:
+
+- ✅ **Consistent Style** - Semicolons, single quotes, 80 char width
+- ✅ **Auto-format** - Format on save and pre-commit
+- ✅ **Integration** - Works seamlessly with ESLint
+
+### Git Hooks with Husky
+
+The project uses Husky to enforce code quality:
+
+- ✅ **Pre-commit Hook** - Runs lint-staged on staged files
+- ✅ **Commit Message Hook** - Validates commit messages with commitlint
+- ✅ **Automatic Setup** - Installed with `npm install`
+
+### Lint-staged Configuration
+
+Only staged files are linted and formatted:
+
+```json
+{
+  "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,css,md}": ["prettier --write"]
+}
+```
+
+### Commit Message Standards
+
+The project follows [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+**Format:** `type(scope): description`
+
+**Allowed types:**
+- `feat` - A new feature
+- `fix` - A bug fix
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, etc.)
+- `refactor` - Code refactoring
+- `perf` - Performance improvements
+- `test` - Adding or updating tests
+- `chore` - Build process or auxiliary tool changes
+- `ci` - CI configuration changes
+- `build` - Build system changes
+- `revert` - Reverting previous commits
+
+**Examples:**
+```bash
+feat: add user authentication system
+fix: resolve database connection timeout
+docs: update API documentation
+refactor: improve error handling middleware
+```
 
 ## Project Structure
 
 ```
+├── .husky/                  # Git hooks configuration
+│   ├── pre-commit          # Runs lint-staged on commit
+│   └── commit-msg          # Validates commit messages
 ├── config/
 │   ├── database.js          # Database configuration
 │   └── index.js
@@ -165,6 +240,10 @@ The server includes comprehensive error handling:
 │   ├── jwt.js              # JWT utilities
 │   └── validations/        # Input validation schemas
 ├── .env.example            # Environment variables template
+├── .prettierrc             # Prettier configuration
+├── .prettierignore         # Prettier ignore patterns
+├── eslint.config.js        # ESLint configuration (v9 flat config)
+├── commitlint.config.cjs   # Commit message linting rules
 ├── index.js                # Main server file
 ├── test-connection.js      # Database connection test
 └── package.json

@@ -1,18 +1,13 @@
-export const login = async (req, res) => {
-};
+export const login = async () => {};
 
-export const register = async (req, res) => {
-};
+export const register = async () => {};
 
-export const logout = async (req, res) => {
-};
+export const logout = async () => {};
 
-export const forgotPassword = async (req, res) => {
-};
+export const forgotPassword = async () => {};
 
-export const resetPassword = async (req, res) => {
-};
+export const resetPassword = async () => {};
 
-export const getUserProfile = async (req, res) => {
-    // Function logic will be implemented here
+export const getUserProfile = async () => {
+  // Function logic will be implemented here
 };

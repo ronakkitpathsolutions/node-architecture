@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 // Import database configuration
-import sequelize from "./config/database.js";
-import routes from "./routes/index.js";
+import sequelize from './config/database.js';
+import routes from './routes/index.js';
 
 // Load environment variables
 dotenv.config();
@@ -18,7 +18,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 // Middleware
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
     type: 'success',
     message: `Server Started on Port: ${process.env.PORT || 3000}`,
     timestamp: new Date().toISOString(),
-    status: 'running'
+    status: 'running',
   });
 });
 
@@ -45,7 +45,7 @@ app.use('/api', (req, res) => {
     success: false,
     message: 'Route not found',
     path: req.originalUrl,
-    hint: 'Check available API endpoints'
+    hint: 'Check available API endpoints',
   });
 });
 
@@ -54,17 +54,17 @@ app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
     message: 'Route not found',
-    path: req.originalUrl
+    path: req.originalUrl,
   });
 });
 
 // Global error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 });
 
@@ -72,23 +72,22 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     console.log('🔄 Connecting to database...');
-    
+
     // Test database connection
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
-    
+
     // Sync database models (optional - remove if you prefer manual migrations)
     if (process.env.NODE_ENV === 'development') {
       await sequelize.sync({ alter: false }); // Use { force: true } to recreate tables
       console.log('📊 Database models synchronized.');
     }
-    
+
     // Start the server
     app.listen(PORT, () => {
       console.log(`🚀 Server Started on Port: ${PORT}`);
       console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
     });
-    
   } catch (error) {
     console.error('❌ Failed to start server:', error.message);
     process.exit(1);
