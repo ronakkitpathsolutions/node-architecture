@@ -1,16 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
 // Import database configuration
 import sequelize from './config/database.js';
+import './models/index.js'; // Import models to ensure they're loaded
 import routes from './routes/index.js';
-
-// Load environment variables
-dotenv.config();
+import { ENV } from './config/index.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = ENV.PORT || 3000;
 
 // CORS Configuration
 const corsOptions = {
@@ -30,7 +28,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.get('/', (req, res) => {
   res.json({
     type: 'success',
-    message: `Server Started on Port: ${process.env.PORT || 3000}`,
+    message: `Server Started on Port: ${ENV.PORT || 3000}`,
     timestamp: new Date().toISOString(),
     status: 'running',
   });
@@ -64,7 +62,7 @@ app.use((err, req, res) => {
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    ...(ENV.NODE_ENV === 'development' && { stack: err.stack }),
   });
 });
 
@@ -77,11 +75,11 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
 
-    // Sync database models (optional - remove if you prefer manual migrations)
-    if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: false }); // Use { force: true } to recreate tables
-      console.log('📊 Database models synchronized.');
-    }
+    // if (ENV.NODE_ENV === 'development') {
+    //   console.log('🔄 Synchronizing database models...');
+    //   await sequelize.sync({ force: false, alter: true }); // Create tables if they don't exist
+    //   console.log('📊 Database models synchronized.');
+    // }
 
     // Start the server
     app.listen(PORT, () => {

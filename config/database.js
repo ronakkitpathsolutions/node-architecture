@@ -1,9 +1,8 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config();
+import { ENV } from './index.js';
 
 // Validate required environment variables
-if (!process.env.DATABASE_URL) {
+if (!ENV.DATABASE_URL) {
   console.error('❌ DATABASE_URL environment variable is not set!');
   console.log(
     'Please create a .env file with DATABASE_URL=postgresql://username:password@localhost:5432/database_name'
@@ -11,9 +10,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(ENV.DATABASE_URL, {
   dialect: 'postgres',
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+  logging: ENV.NODE_ENV === 'development' ? console.log : false,
   pool: {
     max: 5,
     min: 0,

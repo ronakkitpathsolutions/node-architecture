@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { User as UserValidation } from '../utils/validations/index.js';
 import VALIDATION_MESSAGES from '../utils/constants/messages.js';
+import { ENV } from '../config/index.js';
+import { formatZodErrors, validateWithZod } from '../utils/helper.js';
 
 const User = sequelize.define(
   'User',
@@ -31,7 +33,7 @@ const User = sequelize.define(
       type: DataTypes.STRING(150),
       allowNull: false,
       unique: {
-        msg: UserValidation,
+        msg: VALIDATION_MESSAGES.USER.EMAIL.ALREADY_EXISTS,
       },
       validate: {
         isEmail: {
@@ -140,24 +142,32 @@ const User = sequelize.define(
           }
         } catch (error) {
           if (error instanceof z.ZodError) {
-            const errorMessages = error.errors.map(
-              err => `${err.path.join('.')}: ${err.message}`
-            );
-            throw new Error(`Validation failed: ${errorMessages.join(', ')}`);
+            // Transform Zod errors to simple object format
+            const validationErrors = formatZodErrors(error);
+
+            // Create a new error with the simple format
+            const validationError = new Error('Validation failed');
+            validationError.name = 'SequelizeValidationError';
+            validationError.errors = validationErrors;
+            throw validationError;
           }
           throw error;
         }
       },
       beforeCreate: async user => {
         if (user.password) {
-          const saltRounds = 12;
-          user.password = await bcrypt.hash(user.password, saltRounds);
+          user.password = await bcrypt.hash(
+            user.password,
+            ENV.HASH_SALT_ROUNDS
+          );
         }
       },
       beforeUpdate: async user => {
         if (user.changed('password')) {
-          const saltRounds = 12;
-          user.password = await bcrypt.hash(user.password, saltRounds);
+          user.password = await bcrypt.hash(
+            user.password,
+            ENV.HASH_SALT_ROUNDS
+          );
         }
       },
     },
@@ -196,35 +206,35 @@ User.findByEmailWithRole = async function (email) {
 
 // Zod validation methods
 User.validateCreateData = function (data) {
-  return UserValidation.validate.create(data);
+  return validateWithZod(UserValidation.schemas.create, data);
 };
 
 User.validateUpdateData = function (data) {
-  return UserValidation.validate.update(data);
+  return validateWithZod(UserValidation.schemas.update, data);
 };
 
 User.validateLoginData = function (data) {
-  return UserValidation.validate.login(data);
+  return validateWithZod(UserValidation.schemas.login, data);
 };
 
 User.validateRegisterData = function (data) {
-  return UserValidation.validate.register(data);
+  return validateWithZod(UserValidation.schemas.register, data);
 };
 
 User.validatePasswordChange = function (data) {
-  return UserValidation.validate.changePassword(data);
+  return validateWithZod(UserValidation.schemas.changePassword, data);
 };
 
 User.validateForgotPassword = function (data) {
-  return UserValidation.validate.forgotPassword(data);
+  return validateWithZod(UserValidation.schemas.forgotPassword, data);
 };
 
 User.validateResetPassword = function (data) {
-  return UserValidation.validate.resetPassword(data);
+  return validateWithZod(UserValidation.schemas.resetPassword, data);
 };
 
 User.validateUpdateProfile = function (data) {
-  return UserValidation.validate.updateProfile(data);
+  return validateWithZod(UserValidation.schemas.updateProfile, data);
 };
 
 // Static method to get validation schemas

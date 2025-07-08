@@ -1,5 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import { Role as RoleValidation } from '../utils/validations/index.js';
+import { validateWithZod } from '../utils/helper.js';
 
 const Role = sequelize.define(
   'Role',
@@ -48,5 +50,36 @@ const Role = sequelize.define(
     timestamps: true,
   }
 );
+
+// Zod validation methods
+Role.validateCreateData = function (data) {
+  return validateWithZod(RoleValidation.schemas.create, data);
+};
+
+Role.validateUpdateData = function (data) {
+  return validateWithZod(RoleValidation.schemas.update, data);
+};
+
+Role.validateAssignData = function (data) {
+  return validateWithZod(RoleValidation.schemas.assign, data);
+};
+
+Role.validateBulkAssignData = function (data) {
+  return validateWithZod(RoleValidation.schemas.bulkAssign, data);
+};
+
+Role.validatePermissionData = function (data) {
+  return validateWithZod(RoleValidation.schemas.permission, data);
+};
+
+// Static method to get validation schemas
+Role.getValidationSchemas = function () {
+  return RoleValidation.schemas;
+};
+
+// Static method to get a specific validation schema
+Role.getValidationSchema = function (schemaName) {
+  return RoleValidation.schemas[schemaName];
+};
 
 export default Role;
