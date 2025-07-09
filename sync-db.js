@@ -11,7 +11,7 @@ async function syncDatabase() {
 
     // Force sync - this will drop and recreate all tables
     console.log('🔄 Synchronizing database models...');
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true }); // Use alter to create tables if they don't exist
     console.log('✅ Database models synchronized successfully.');
     console.log('📊 All tables have been created.');
 

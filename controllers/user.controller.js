@@ -45,8 +45,6 @@ export const getUser = async (req, res) => {
     // 1. Validate user ID (Zod)
     const validationResult = Common.validate.id(parseInt(userId, 10));
 
-    console.log('validationResult', validationResult);
-
     if (!validationResult.success) {
       return res
         .status(400)

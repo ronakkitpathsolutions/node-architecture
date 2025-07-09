@@ -37,6 +37,8 @@ const UserValidationSchema = z.object({
       const uniqueProviders = new Set(providers);
       return uniqueProviders.size === providers.length;
     }, VALIDATION_MESSAGES.USER.PROVIDERS.DUPLICATE),
+
+  is_active: z.boolean().optional().default(false),
 });
 
 // Schema for user creation (all required fields)
@@ -97,6 +99,7 @@ export const RegisterUserSchema = z
       .array(z.enum(['google', 'github']))
       .optional()
       .default([]),
+    is_active: z.boolean().optional().default(false), // Default to false for new registrations
   })
   .refine(data => data.password === data.confirmPassword, {
     message: VALIDATION_MESSAGES.USER.PASSWORD.MISMATCH,
@@ -115,7 +118,9 @@ export const ForgotPasswordSchema = z.object({
 // Schema for reset password
 export const ResetPasswordSchema = z
   .object({
-    token: z.string().min(1, VALIDATION_MESSAGES.AUTH.RESET.TOKEN_REQUIRED),
+    refresh_token: z
+      .string()
+      .min(1, VALIDATION_MESSAGES.AUTH.RESET.TOKEN_REQUIRED),
     newPassword: z
       .string()
       .min(6, VALIDATION_MESSAGES.USER.PASSWORD.TOO_SHORT)
@@ -152,6 +157,7 @@ export const UpdateProfileSchema = z.object({
       const uniqueProviders = new Set(providers);
       return uniqueProviders.size === providers.length;
     }, VALIDATION_MESSAGES.USER.PROVIDERS.DUPLICATE),
+  is_active: z.boolean().optional(),
 });
 
 // Validation helper functions

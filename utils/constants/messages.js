@@ -49,6 +49,10 @@ export const VALIDATION_MESSAGES = {
       DUPLICATE: 'Providers must be unique',
       UNSUPPORTED: 'Unsupported provider',
     },
+    IS_ACTIVE: {
+      INVALID: 'is_active must be a boolean value',
+      REQUIRED: 'is_active status is required',
+    },
     GENERAL: {
       NOT_FOUND: 'User not found',
       ALREADY_EXISTS: 'User already exists',

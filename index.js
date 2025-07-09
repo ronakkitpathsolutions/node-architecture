@@ -77,7 +77,7 @@ async function startServer() {
 
     // if (ENV.NODE_ENV === 'development') {
     //   console.log('🔄 Synchronizing database models...');
-    //   await sequelize.sync({ force: false, alter: true }); // Create tables if they don't exist
+    //   await sequelize.sync({ alter: true }); // Create tables if they don't exist
     //   console.log('📊 Database models synchronized.');
     // }
 

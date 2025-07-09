@@ -2,16 +2,16 @@ import express from 'express';
 import {
   login,
   register,
-  logout,
   forgotPassword,
   resetPassword,
+  verifyUser,
 } from '../controllers/auth.controller.js';
 
 const authRoutes = express.Router();
 
 authRoutes.post('/login', login);
 authRoutes.post('/register', register);
-authRoutes.post('/logout', logout);
+authRoutes.get('/verify', verifyUser);
 authRoutes.post('/forgot-password', forgotPassword);
 authRoutes.post('/reset-password', resetPassword);
 

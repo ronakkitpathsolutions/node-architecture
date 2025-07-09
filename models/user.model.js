@@ -71,7 +71,7 @@ const User = sequelize.define(
       },
     },
     providers: {
-      type: DataTypes.ARRAY(DataTypes.ENUM('google', 'github')),
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
       defaultValue: [],
       validate: {
@@ -87,6 +87,26 @@ const User = sequelize.define(
               );
             }
           }
+        },
+      },
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      validate: {
+        isBoolean: {
+          msg: VALIDATION_MESSAGES.USER.IS_ACTIVE.INVALID,
+        },
+      },
+    },
+    refresh_token: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      validate: {
+        len: {
+          args: [10, 255],
+          msg: 'Refresh token must be between 10 and 255 characters',
         },
       },
     },
@@ -115,6 +135,7 @@ const User = sequelize.define(
           password: user.password,
           role_id: user.role_id,
           providers: user.providers,
+          is_active: user.is_active,
         };
 
         try {
@@ -133,6 +154,8 @@ const User = sequelize.define(
             if (user.changed('role_id')) changedFields.role_id = user.role_id;
             if (user.changed('providers'))
               changedFields.providers = user.providers;
+            if (user.changed('is_active'))
+              changedFields.is_active = user.is_active;
 
             if (Object.keys(changedFields).length > 0) {
               const validatedData =

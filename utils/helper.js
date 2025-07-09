@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-/**
- * Formats Zod validation errors into a simple object format
- * @param {z.ZodError} zodError - The Zod validation error
- * @returns {Object} Simple error object with field names as keys and error messages as values
- */
 export const formatZodErrors = zodError => {
   const errors = {};
   zodError.errors.forEach(err => {
@@ -14,11 +9,6 @@ export const formatZodErrors = zodError => {
   return errors;
 };
 
-/**
- * Formats Sequelize validation errors into a simple object format
- * @param {Object} sequelizeError - The Sequelize validation error
- * @returns {Object} Simple error object with field names as keys and error messages as values
- */
 export const formatSequelizeErrors = sequelizeError => {
   const errors = {};
 
@@ -33,13 +23,6 @@ export const formatSequelizeErrors = sequelizeError => {
   return errors;
 };
 
-/**
- * Creates a standardized validation result object
- * @param {boolean} success - Whether validation was successful
- * @param {Object} data - The validated data (if successful)
- * @param {Object} errors - The validation errors (if unsuccessful)
- * @returns {Object} Standardized validation result
- */
 export const createValidationResult = (success, data = null, errors = null) => {
   return {
     success,
@@ -47,12 +30,6 @@ export const createValidationResult = (success, data = null, errors = null) => {
   };
 };
 
-/**
- * Validates data using a Zod schema and returns a standardized result
- * @param {z.ZodSchema} schema - The Zod schema to validate against
- * @param {Object} data - The data to validate
- * @returns {Object} Standardized validation result
- */
 export const validateWithZod = (schema, data) => {
   try {
     const result = schema.safeParse(data);
@@ -70,14 +47,6 @@ export const validateWithZod = (schema, data) => {
   }
 };
 
-/**
- * Creates a standardized API response object
- * @param {boolean} success - Whether the operation was successful
- * @param {string} message - Response message
- * @param {Object} data - Response data (if successful)
- * @param {Object} error - Error details (if unsuccessful)
- * @returns {Object} Standardized API response
- */
 export const createApiResponse = (
   success,
   message,
@@ -91,11 +60,6 @@ export const createApiResponse = (
   };
 };
 
-/**
- * Extracts and formats validation errors from various error types
- * @param {Error} error - The error to format
- * @returns {Object} Formatted error object
- */
 export const extractValidationErrors = error => {
   if (error instanceof z.ZodError) {
     return formatZodErrors(error);
