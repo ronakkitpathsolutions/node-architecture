@@ -5,14 +5,35 @@ import {
   forgotPassword,
   resetPassword,
   verifyUser,
+  resendVerification,
 } from '../controllers/auth.controller.js';
+import {
+  forgotPasswordValidationMiddleware,
+  loginValidationMiddleware,
+  registerValidationMiddleware,
+  resendVerificationValidationMiddleware,
+  resetPasswordValidationMiddleware,
+} from '../middlewares/auth.middleware.js';
 
 const authRoutes = express.Router();
 
-authRoutes.post('/login', login);
-authRoutes.post('/register', register);
+authRoutes.post('/login', loginValidationMiddleware, login);
+authRoutes.post('/register', registerValidationMiddleware, register);
 authRoutes.get('/verify', verifyUser);
-authRoutes.post('/forgot-password', forgotPassword);
-authRoutes.post('/reset-password', resetPassword);
+authRoutes.post(
+  '/forgot-password',
+  forgotPasswordValidationMiddleware,
+  forgotPassword
+);
+authRoutes.post(
+  '/reset-password',
+  resetPasswordValidationMiddleware,
+  resetPassword
+);
+authRoutes.post(
+  '/resend-verification',
+  resendVerificationValidationMiddleware,
+  resendVerification
+);
 
 export default authRoutes;

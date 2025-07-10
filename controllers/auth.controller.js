@@ -6,23 +6,8 @@ import { generateRefreshToken } from '../utils/refreshToken.js';
 
 export const login = async (req, res) => {
   try {
-    // 1. Validate input using Zod
-    const validationResult = User.validateLoginData(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
-
-    const { email, password } = validationResult.data;
+    // Get validated data from middleware
+    const { email, password } = req.validatedData;
 
     // 2. Find user by email with role
     const user = await User.findByEmailWithRole(email);
@@ -80,23 +65,8 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    // Validate input using Zod
-    const validationResult = User.validateRegisterData(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
-
-    const { email } = validationResult.data;
+    // Get validated data from middleware
+    const { email } = req.validatedData;
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
     if (existingUser) {
@@ -109,7 +79,7 @@ export const register = async (req, res) => {
     const refreshToken = generateRefreshToken();
     // Create user (Zod + Sequelize hooks will handle password hash, etc.)
     const user = await User.create({
-      ...validationResult.data,
+      ...req.validatedData,
       refresh_token: refreshToken,
     });
 
@@ -158,23 +128,8 @@ export const register = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   try {
-    // Validate input using Zod
-    const validationResult = User.validateForgotPassword(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
-
-    const { email } = validationResult.data;
+    // Get validated data from middleware
+    const { email } = req.validatedData;
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
     if (!existingUser) {
@@ -213,23 +168,8 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    // Validate input using Zod
-    const validationResult = User.validateResetPassword(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
-
-    const { refresh_token, newPassword } = validationResult.data;
+    // Get validated data from middleware
+    const { refresh_token, newPassword } = req.validatedData;
 
     // Find user by refresh token
     const user = await User.findOne({ where: { refresh_token } });
@@ -328,7 +268,8 @@ export const verifyUser = async (req, res) => {
 
 export const resendVerification = async (req, res) => {
   try {
-    const { email } = req.body;
+    // Get validated data from middleware
+    const { email } = req.validatedData;
     const user = await User.findByEmail(email);
     if (!user) {
       return res.status(404).json(createApiResponse(false, 'User not found'));

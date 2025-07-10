@@ -1,27 +1,13 @@
 import User from '../models/user.model.js';
 import { createApiResponse, extractValidationErrors } from '../utils/helper.js';
-import { Common } from '../utils/validations/index.js';
 
 export const createUser = async (req, res) => {
   try {
-    // 1. Validate input using Zod
-    const validationResult = User.validateCreateData(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
+    // Get validated data from middleware
+    const validatedData = req.validatedData;
 
     // 2. Create user (Zod + Sequelize hooks will handle password hash, etc.)
-    const user = await User.create(validationResult.data);
+    const user = await User.create(validatedData);
 
     // 3. Return created user (password already stripped in .toJSON())
     return res
@@ -40,23 +26,8 @@ export const createUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-
-    // 1. Validate user ID (Zod)
-    const validationResult = Common.validate.id(parseInt(userId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid user ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
+    // Get validated ID from middleware
+    const userId = req.validatedId;
 
     // 2. Fetch user by ID
     const user = await User.findByPk(userId);
@@ -82,39 +53,9 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-
-    // 1. Validate user ID (Zod)
-    const validationResult = Common.validate.id(parseInt(userId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid user ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
-
-    // 2. Validate update data (Zod)
-    const updateValidationResult = User.validateUpdateData(req.body);
-
-    if (!updateValidationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            updateValidationResult.errors
-          )
-        );
-    }
+    // Get validated ID and data from middleware
+    const userId = req.validatedId;
+    const updateData = req.validatedData;
 
     // 3. Fetch user by ID
     const user = await User.findByPk(userId);
@@ -124,7 +65,7 @@ export const updateUser = async (req, res) => {
     }
 
     // 4. Update user data
-    await user.update(updateValidationResult.data);
+    await user.update(updateData);
 
     // 5. Return updated user data
     return res
@@ -163,23 +104,8 @@ export const getAllUsers = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-
-    // 1. Validate user ID (Zod)
-    const validationResult = Common.validate.id(parseInt(userId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid user ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
+    // Get validated ID from middleware
+    const userId = req.validatedId;
 
     // 2. Fetch user by ID
     const user = await User.findByPk(userId);

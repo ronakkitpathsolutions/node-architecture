@@ -1,27 +1,13 @@
 import Role from '../models/role.model.js';
 import { createApiResponse, extractValidationErrors } from '../utils/helper.js';
-import { Common, Role as RoleValidation } from '../utils/validations/index.js';
 
 export const createRole = async (req, res) => {
   try {
-    // 1. Validate input using Zod
-    const validationResult = RoleValidation.validate.create(req.body);
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            validationResult.errors
-          )
-        );
-    }
+    // Get validated data from middleware
+    const validatedData = req.validatedData;
 
     // 2. Create role
-    const role = await Role.create(validationResult.data);
+    const role = await Role.create(validatedData);
 
     // 3. Return created role
     return res
@@ -40,23 +26,8 @@ export const createRole = async (req, res) => {
 
 export const getRole = async (req, res) => {
   try {
-    const roleId = req.params.id;
-
-    // 1. Validate role ID (Zod)
-    const validationResult = Common.validate.id(parseInt(roleId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid role ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
+    // Get validated ID from middleware
+    const roleId = req.validatedId;
 
     // 2. Fetch role by ID
     const role = await Role.findByPk(roleId);
@@ -102,39 +73,9 @@ export const getAllRoles = async (req, res) => {
 
 export const updateRole = async (req, res) => {
   try {
-    const roleId = req.params.id;
-
-    // 1. Validate role ID (Zod)
-    const validationResult = Common.validate.id(parseInt(roleId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid role ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
-
-    // 2. Validate update data (Zod)
-    const updateValidationResult = RoleValidation.validate.update(req.body);
-
-    if (!updateValidationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Validation failed',
-            null,
-            updateValidationResult.errors
-          )
-        );
-    }
+    // Get validated ID and data from middleware
+    const roleId = req.validatedId;
+    const updateData = req.validatedData;
 
     // 3. Fetch role by ID
     const role = await Role.findByPk(roleId);
@@ -144,7 +85,7 @@ export const updateRole = async (req, res) => {
     }
 
     // 4. Update role data
-    await role.update(updateValidationResult.data);
+    await role.update(updateData);
 
     // 5. Return updated role data
     return res
@@ -163,23 +104,8 @@ export const updateRole = async (req, res) => {
 
 export const deleteRole = async (req, res) => {
   try {
-    const roleId = req.params.id;
-
-    // 1. Validate role ID (Zod)
-    const validationResult = Common.validate.id(parseInt(roleId, 10));
-
-    if (!validationResult.success) {
-      return res
-        .status(400)
-        .json(
-          createApiResponse(
-            false,
-            'Invalid role ID',
-            null,
-            validationResult.error
-          )
-        );
-    }
+    // Get validated ID from middleware
+    const roleId = req.validatedId;
 
     // 2. Fetch role by ID
     const role = await Role.findByPk(roleId);
