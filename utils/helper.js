@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import logger from './logger.js';
 
 export const formatZodErrors = zodError => {
   const errors = {};
@@ -281,6 +282,7 @@ export const asyncHandler = (fn, errorMessage = 'Operation failed') => {
       await fn(req, res, next);
     } catch (error) {
       const formattedErrors = extractValidationErrors(error);
+      logger.error(error);
       return res
         .status(500)
         .json(createApiResponse(false, errorMessage, null, formattedErrors));
