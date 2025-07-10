@@ -52,22 +52,34 @@ export const Permission = {
   schemas: {
     create: PermissionValidation.CreatePermissionSchema,
     update: PermissionValidation.UpdatePermissionSchema,
-    assignToRole: PermissionValidation.AssignPermissionToRoleSchema,
+    assign: PermissionValidation.AssignPermissionToRoleSchema,
     bulkAssign: PermissionValidation.BulkAssignPermissionSchema,
-    check: PermissionValidation.CheckPermissionSchema,
     filter: PermissionValidation.FilterPermissionSchema,
+    access: PermissionValidation.ValidateAccessSchema,
+    updateAccess: PermissionValidation.UpdateAccessSchema,
+    accessControl: PermissionValidation.AccessControlSchema,
+    permissionLevel: PermissionValidation.PermissionLevelSchema,
   },
   validate: {
     create: PermissionValidation.validateCreatePermission,
     update: PermissionValidation.validateUpdatePermission,
-    assignToRole: PermissionValidation.validateAssignPermissionToRole,
+    assign: PermissionValidation.validateAssignPermissionToRole,
     bulkAssign: PermissionValidation.validateBulkAssignPermission,
-    check: PermissionValidation.validateCheckPermission,
     filter: PermissionValidation.validateFilterPermission,
+    access: PermissionValidation.validateAccess,
+    updateAccess: PermissionValidation.validateUpdateAccess,
+  },
+  templates: {
+    fullAccess: PermissionValidation.createFullAccessTemplate,
+    readOnly: PermissionValidation.createReadOnlyAccessTemplate,
+    manager: PermissionValidation.createManagerAccessTemplate,
+    noAccess: PermissionValidation.createNoAccessTemplate,
+  },
+  helpers: {
+    mergeAccess: PermissionValidation.mergeAccessPermissions,
   },
   enums: {
-    actions: PermissionValidation.ActionEnum,
-    resources: PermissionValidation.ResourceEnum,
+    modules: PermissionValidation.ModuleEnum,
   },
 };
 

@@ -20,6 +20,10 @@ export const VALIDATION_MESSAGES = {
       EMPTY: 'Name cannot be empty',
       INVALID_FORMAT: 'Name contains invalid characters',
     },
+    PROFILE: {
+      INVALID_URL: 'Profile image must be a valid URL',
+      TOO_LONG: 'Profile image URL must not exceed 500 characters',
+    },
     EMAIL: {
       REQUIRED: 'Email is required',
       INVALID: 'Must be a valid email address',

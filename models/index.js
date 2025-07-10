@@ -14,6 +14,16 @@ User.belongsTo(Role, {
   as: 'role',
 });
 
+Role.hasMany(Permission, {
+  foreignKey: 'role_id',
+  as: 'permissions',
+});
+
+Permission.belongsTo(Role, {
+  foreignKey: 'role_id',
+  as: 'role',
+});
+
 // Export models and sequelize instance
 const db = {
   sequelize,

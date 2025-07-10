@@ -115,7 +115,7 @@ const User = sequelize.define(
       allowNull: true,
       validate: {
         isUrl: {
-          msg: 'Profile image must be a valid URL',
+          msg: VALIDATION_MESSAGES.USER.PROFILE.INVALID_URL,
         },
       },
     },

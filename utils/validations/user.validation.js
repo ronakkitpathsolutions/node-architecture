@@ -42,8 +42,8 @@ const UserValidationSchema = z.object({
 
   profile: z
     .string()
-    .url('Profile image must be a valid URL')
-    .max(500, 'Profile image URL is too long')
+    .url(VALIDATION_MESSAGES.USER.PROFILE.INVALID_URL)
+    .max(500, VALIDATION_MESSAGES.USER.PROFILE.TOO_LONG)
     .optional(),
 });
 
@@ -166,8 +166,8 @@ export const UpdateProfileSchema = z.object({
   is_active: z.boolean().optional(),
   profile: z
     .string()
-    .url('Profile image must be a valid URL')
-    .max(500, 'Profile image URL is too long')
+    .url(VALIDATION_MESSAGES.USER.PROFILE.INVALID_URL)
+    .max(500, VALIDATION_MESSAGES.USER.PROFILE.TOO_LONG)
     .optional(),
 });
 
