@@ -110,6 +110,15 @@ const User = sequelize.define(
         },
       },
     },
+    profile: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+      validate: {
+        isUrl: {
+          msg: 'Profile image must be a valid URL',
+        },
+      },
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -136,6 +145,7 @@ const User = sequelize.define(
           role_id: user.role_id,
           providers: user.providers,
           is_active: user.is_active,
+          profile: user.profile,
         };
 
         try {
@@ -156,6 +166,7 @@ const User = sequelize.define(
               changedFields.providers = user.providers;
             if (user.changed('is_active'))
               changedFields.is_active = user.is_active;
+            if (user.changed('profile')) changedFields.profile = user.profile;
 
             if (Object.keys(changedFields).length > 0) {
               const validatedData =

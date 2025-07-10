@@ -39,6 +39,12 @@ const UserValidationSchema = z.object({
     }, VALIDATION_MESSAGES.USER.PROVIDERS.DUPLICATE),
 
   is_active: z.boolean().optional().default(false),
+
+  profile: z
+    .string()
+    .url('Profile image must be a valid URL')
+    .max(500, 'Profile image URL is too long')
+    .optional(),
 });
 
 // Schema for user creation (all required fields)
@@ -158,6 +164,11 @@ export const UpdateProfileSchema = z.object({
       return uniqueProviders.size === providers.length;
     }, VALIDATION_MESSAGES.USER.PROVIDERS.DUPLICATE),
   is_active: z.boolean().optional(),
+  profile: z
+    .string()
+    .url('Profile image must be a valid URL')
+    .max(500, 'Profile image URL is too long')
+    .optional(),
 });
 
 // Validation helper functions

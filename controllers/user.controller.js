@@ -57,6 +57,11 @@ export const updateUser = async (req, res) => {
     const userId = req.validatedId;
     const updateData = req.validatedData;
 
+    // Check if file was uploaded and add to update data
+    if (req.file) {
+      updateData.profile = req.file.location; // S3 URL from multer-s3
+    }
+
     // 3. Fetch user by ID
     const user = await User.findByPk(userId);
 
