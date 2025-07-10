@@ -238,6 +238,101 @@ User.findByEmailWithRole = async function (email) {
   });
 };
 
+User.paginateWithSearch = async function (options = {}) {
+  const {
+    page = 1,
+    limit = 10,
+    search = '',
+    sortBy = 'createdAt',
+    sortOrder = 'DESC',
+    filters = {},
+    includeRole = true,
+    where = {},
+    include = [],
+    attributes,
+  } = options;
+
+  // Import Op here to avoid circular dependency issues
+  const { Op } = await import('sequelize');
+
+  // Validate and sanitize parameters
+  const pageNumber = Math.max(1, parseInt(page, 10));
+  const limitNumber = Math.max(1, Math.min(100, parseInt(limit, 10))); // Max 100 items per page
+  const offset = (pageNumber - 1) * limitNumber;
+
+  // Validate sort order
+  const validSortOrder = ['ASC', 'DESC'].includes(sortOrder.toUpperCase())
+    ? sortOrder.toUpperCase()
+    : 'DESC';
+
+  try {
+    // Build where clause
+    const whereClause = { ...where };
+
+    // Add search functionality
+    if (search && search.trim()) {
+      const searchTerm = search.trim();
+      whereClause[Op.or] = [
+        { name: { [Op.iLike]: `%${searchTerm}%` } },
+        { email: { [Op.iLike]: `%${searchTerm}%` } },
+      ];
+    }
+
+    // Add filters
+    if (filters && typeof filters === 'object') {
+      Object.keys(filters).forEach(key => {
+        if (
+          filters[key] !== undefined &&
+          filters[key] !== null &&
+          filters[key] !== ''
+        ) {
+          whereClause[key] = filters[key];
+        }
+      });
+    }
+
+    // Build include array
+    const includeArray = [...include];
+    if (includeRole) {
+      includeArray.push({
+        model: sequelize.models.Role,
+        as: 'role',
+        attributes: ['id', 'name'],
+      });
+    }
+
+    // Build order clause
+    const orderClause = [[sortBy, validSortOrder]];
+
+    // Get total count
+    const totalCount = await this.count({
+      where: whereClause,
+      include: includeArray.length > 0 ? includeArray : undefined,
+    });
+
+    // Get paginated data
+    const users = await this.findAll({
+      where: whereClause,
+      include: includeArray,
+      order: orderClause,
+      limit: limitNumber,
+      offset,
+      attributes,
+    });
+
+    return {
+      result: users,
+      pagination: {
+        currentPage: pageNumber,
+        totalCount,
+        limit: limitNumber,
+      },
+    };
+  } catch (error) {
+    throw new Error(`Pagination failed: ${error.message}`);
+  }
+};
+
 // Zod validation methods
 User.validateCreateData = function (data) {
   return validateWithZod(UserValidation.schemas.create, data);

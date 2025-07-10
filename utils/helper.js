@@ -274,3 +274,16 @@ export const validateAccessUpdates = accessUpdates => {
 
   return { isValid: true };
 };
+
+export const asyncHandler = (fn, errorMessage = 'Operation failed') => {
+  return async (req, res, next) => {
+    try {
+      await fn(req, res, next);
+    } catch (error) {
+      const formattedErrors = extractValidationErrors(error);
+      return res
+        .status(500)
+        .json(createApiResponse(false, errorMessage, null, formattedErrors));
+    }
+  };
+};

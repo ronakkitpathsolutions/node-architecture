@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 // Import database configuration
-import sequelize from './config/database.js';
+import { poolConnection, closeConnection } from './config/database.js';
 import './models/index.js'; // Import models to ensure they're loaded
 import routes from './routes/index.js';
 import { ENV } from './config/index.js';
@@ -71,39 +71,69 @@ async function startServer() {
   try {
     console.log('🔄 Connecting to database...');
 
-    // Test database connection
-    await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
+    // Test database connection with enhanced pool monitoring
+    const connectionResult = await poolConnection();
 
-    // if (ENV.NODE_ENV === 'development') {
-    //   console.log('🔄 Synchronizing database models...');
-    //   await sequelize.sync({ alter: true }); // Create tables if they don't exist
-    //   console.log('📊 Database models synchronized.');
-    // }
+    // Use the returned pool config to avoid redundant access
+    if (connectionResult.success && connectionResult.poolConfig) {
+      console.log(
+        `🏊‍♂️ Connection Pool initialized - Max: ${connectionResult.poolConfig.max}, Min: ${connectionResult.poolConfig.min}`
+      );
+    } else {
+      console.log('🏊‍♂️ Connection Pool initialized with default settings');
+    }
 
     // Start the server
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server Started on Port: ${PORT}`);
       console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
     });
+
+    return server;
   } catch (error) {
     console.error('❌ Failed to start server:', error.message);
     process.exit(1);
   }
 }
 
-// Handle graceful shutdown
-process.on('SIGTERM', async () => {
-  console.log('🔄 Received SIGTERM, shutting down gracefully...');
-  await sequelize.close();
-  process.exit(0);
-});
+// Global server instance for graceful shutdown
+let serverInstance = null;
 
-process.on('SIGINT', async () => {
-  console.log('🔄 Received SIGINT, shutting down gracefully...');
-  await sequelize.close();
-  process.exit(0);
-});
+// Handle graceful shutdown
+const gracefulShutdown = async signal => {
+  console.log(`🔄 Received ${signal}, shutting down gracefully...`);
+
+  try {
+    // Close server first
+    if (serverInstance) {
+      await new Promise(resolve => {
+        serverInstance.close(resolve);
+      });
+      console.log('✅ Server closed successfully.');
+    }
+
+    // Then close database connections
+    await closeConnection();
+
+    console.log('✅ Graceful shutdown completed.');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error during graceful shutdown:', error.message);
+    process.exit(1);
+  }
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Start the server
-startServer();
+async function initializeApp() {
+  try {
+    serverInstance = await startServer();
+  } catch (error) {
+    console.error('❌ Failed to initialize application:', error.message);
+    process.exit(1);
+  }
+}
+
+initializeApp();
