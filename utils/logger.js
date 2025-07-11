@@ -66,9 +66,20 @@ if (shouldLog) {
     },
   };
 } else {
-  // Dev: Just log to console
+  // Dev: Just log to console and also to file for debugging
   logger = {
-    error: console.error,
+    error: message => {
+      console.error('Error:', message);
+    },
+    warn: message => {
+      console.warn('Warning:', message);
+    },
+    info: message => {
+      console.info('Info:', message);
+    },
+    debug: message => {
+      console.debug('Debug:', message);
+    },
   };
 }
 

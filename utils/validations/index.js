@@ -4,6 +4,7 @@ import * as RoleValidation from './role.validation.js';
 import * as PermissionValidation from './permission.validation.js';
 import * as CategoryValidation from './category.validation.js';
 import * as ProductValidation from './product.validation.js';
+import * as CartValidation from './cart.validation.js';
 import * as CommonValidation from './common.validation.js';
 import ValidationMiddleware from './middleware.js';
 
@@ -73,6 +74,16 @@ export const Product = {
     updatePrice: ProductValidation.UpdateProductPriceSchema,
     updateStock: ProductValidation.UpdateProductStockSchema,
     updateStatus: ProductValidation.UpdateProductStatusSchema,
+  },
+};
+
+// Export all cart validations
+export const Cart = {
+  schemas: {
+    addToCart: CartValidation.AddToCartSchema,
+    updateQuantity: CartValidation.UpdateCartQuantitySchema,
+    cartItemId: CartValidation.CartItemIdSchema,
+    productId: CartValidation.ProductIdSchema,
   },
 };
 
@@ -149,6 +160,7 @@ export {
   PermissionValidation,
   CategoryValidation,
   ProductValidation,
+  CartValidation,
   CommonValidation,
   ValidationMiddleware,
 };

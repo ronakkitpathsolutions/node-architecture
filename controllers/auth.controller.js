@@ -1,5 +1,6 @@
 import { createApiResponse, asyncHandler } from '../utils/helper.js';
 import User from '../models/user.model.js';
+import Role from '../models/role.model.js';
 import { generateToken } from '../utils/jwt.js';
 import { sendEmail } from '../utils/mailer.js';
 import { generateRefreshToken } from '../utils/refreshToken.js';
@@ -173,9 +174,33 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .json(createApiResponse(true, 'Password reset successful', token));
 }, VALIDATION_MESSAGES.AUTH.RESET.FAILED);
 
-export const getUserProfile = async () => {
-  // Function logic will be implemented here
-};
+export const getUserProfile = asyncHandler(async (req, res) => {
+  // Get user ID from authentication middleware
+  const userId = req.user.id;
+
+  // Fetch user with role information
+  const user = await User.findByPk(userId, {
+    include: [
+      {
+        model: Role,
+        as: 'role',
+        attributes: ['id', 'name'],
+      },
+    ],
+  });
+
+  if (!user) {
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.USER.GENERAL.NOT_FOUND)
+      );
+  }
+
+  return res
+    .status(200)
+    .json(createApiResponse(true, 'User profile retrieved successfully', user));
+}, 'Failed to fetch user profile');
 
 export const verifyUser = asyncHandler(async (req, res) => {
   const { refresh_token } = req.query;

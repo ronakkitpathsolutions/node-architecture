@@ -4,6 +4,12 @@ import { VALIDATION_MESSAGES } from './constants/messages.js';
 
 export const formatZodErrors = zodError => {
   const errors = {};
+
+  // Safety check for zodError and its errors property
+  if (!zodError || !zodError.errors || !Array.isArray(zodError.errors)) {
+    return { general: 'Validation error occurred' };
+  }
+
   zodError.errors.forEach(err => {
     const fieldName = err.path.join('.');
     errors[fieldName] = err.message;
@@ -63,6 +69,11 @@ export const createApiResponse = (
 };
 
 export const extractValidationErrors = error => {
+  // Safety check for error object
+  if (!error) {
+    return { general: 'An unknown error occurred' };
+  }
+
   if (error instanceof z.ZodError) {
     return formatZodErrors(error);
   }
@@ -285,8 +296,12 @@ export const asyncHandler = (
     try {
       await fn(req, res, next);
     } catch (error) {
+      // Log the full error details for debugging
+      logger.error(`AsyncHandler Error: ${error.message}`);
+      logger.error(`Stack: ${error.stack}`);
+
       const formattedErrors = extractValidationErrors(error);
-      logger.error(error);
+
       return res
         .status(500)
         .json(createApiResponse(false, errorMessage, null, formattedErrors));

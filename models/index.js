@@ -4,6 +4,7 @@ import Role from './role.model.js';
 import Permission from './permission.model.js';
 import Category from './category.model.js';
 import Product from './product.model.js';
+import Cart from './cart.model.js';
 
 // Define associations
 Role.hasMany(User, {
@@ -26,6 +27,28 @@ Permission.belongsTo(Role, {
   as: 'role',
 });
 
+// User-Cart associations
+User.hasMany(Cart, {
+  foreignKey: 'user_id',
+  as: 'cart_items',
+});
+
+Cart.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user',
+});
+
+// Product-Cart associations
+Product.hasMany(Cart, {
+  foreignKey: 'product_id',
+  as: 'cart_items',
+});
+
+Cart.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product',
+});
+
 // Product-Category associations are defined in product.model.js
 
 // Export models and sequelize instance
@@ -36,6 +59,7 @@ const db = {
   Permission,
   Category,
   Product,
+  Cart,
 };
 
 export default db;

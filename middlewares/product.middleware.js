@@ -1,11 +1,11 @@
 import Product from '../models/product.model.js';
 import { createValidationMiddleware } from './validation.middleware.js';
-import { createApiResponse } from '../utils/helper.js';
+import { createApiResponse, asyncHandler } from '../utils/helper.js';
 import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 // Custom middleware for product creation that handles file upload
-export const createProductValidationMiddleware = async (req, res, next) => {
-  try {
+export const createProductValidationMiddleware = asyncHandler(
+  async (req, res, next) => {
     // If a file was uploaded, add the image URL to the request body
     if (req.file && req.file.location) {
       req.body.image_url = req.file.location;
@@ -30,18 +30,13 @@ export const createProductValidationMiddleware = async (req, res, next) => {
     // Add validated data to request object for use in controller
     req.validatedData = validationResult.data;
     next();
-  } catch (error) {
-    return res.status(500).json(
-      createApiResponse(false, 'Validation error', null, {
-        general: error.message || 'An unexpected validation error occurred',
-      })
-    );
-  }
-};
+  },
+  'Validation error'
+);
 
 // Custom middleware for product update that handles file upload
-export const updateProductValidationMiddleware = async (req, res, next) => {
-  try {
+export const updateProductValidationMiddleware = asyncHandler(
+  async (req, res, next) => {
     // If a file was uploaded, add the image URL to the request body
     if (req.file && req.file.location) {
       req.body.image_url = req.file.location;
@@ -66,14 +61,9 @@ export const updateProductValidationMiddleware = async (req, res, next) => {
     // Add validated data to request object for use in controller
     req.validatedData = validationResult.data;
     next();
-  } catch (error) {
-    return res.status(500).json(
-      createApiResponse(false, 'Validation error', null, {
-        general: error.message || 'An unexpected validation error occurred',
-      })
-    );
-  }
-};
+  },
+  'Validation error'
+);
 
 export const partialUpdateProductValidationMiddleware =
   createValidationMiddleware(Product.validatePartialUpdateData);

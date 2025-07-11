@@ -317,6 +317,41 @@ export const VALIDATION_MESSAGES = {
     },
   },
 
+  // Cart validation messages
+  CART: {
+    USER_ID: {
+      REQUIRED: 'User ID is required',
+      INVALID: 'User ID must be a valid integer',
+      POSITIVE: 'User ID must be a positive number',
+    },
+    PRODUCT_ID: {
+      REQUIRED: 'Product ID is required',
+      INVALID: 'Product ID must be a valid integer',
+      POSITIVE: 'Product ID must be a positive number',
+      NOT_FOUND: 'Product not found',
+    },
+    QUANTITY: {
+      REQUIRED: 'Quantity is required',
+      INVALID: 'Quantity must be a valid integer',
+      POSITIVE: 'Quantity must be a positive number',
+      MIN_VALUE: 'Quantity must be at least 1',
+      MAX_VALUE: 'Quantity cannot exceed 999',
+    },
+    ITEM: {
+      NOT_FOUND: 'Cart item not found',
+      ALREADY_EXISTS: 'Item already exists in cart',
+      EMPTY_CART: 'Cart is empty',
+      INSUFFICIENT_STOCK: 'Insufficient stock available',
+    },
+    OPERATION: {
+      ADD_SUCCESS: 'Item added to cart successfully',
+      UPDATE_SUCCESS: 'Cart item updated successfully',
+      REMOVE_SUCCESS: 'Item removed from cart successfully',
+      CLEAR_SUCCESS: 'Cart cleared successfully',
+      FAILED: 'Cart operation failed',
+    },
+  },
+
   // System messages
   SYSTEM: {
     SERVER_ERROR: 'Internal server error',

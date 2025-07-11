@@ -5,6 +5,7 @@ import roleRoutes from './role.routes.js';
 import permissionRoutes from './permission.routes.js';
 import categoryRoutes from './category.routes.js';
 import productRoutes from './product.routes.js';
+import cartRoutes from './cart.routes.js';
 
 const router = express.Router();
 router.use('/auth', authRoutes);
@@ -13,5 +14,6 @@ router.use(roleRoutes);
 router.use(permissionRoutes);
 router.use(categoryRoutes);
 router.use(productRoutes);
+router.use(cartRoutes);
 // Handle /api route specifically (when no sub-route matches)
 export default router;
