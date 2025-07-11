@@ -15,12 +15,12 @@ import {
   createCategoryValidationMiddleware,
   updateCategoryValidationMiddleware,
 } from '../middlewares/category.middleware.js';
-import { getCategoryImageUploadMiddleware } from '../middlewares/s3.middleware.js';
+import { getImageUploadWithWebpMiddleware } from '../middlewares/s3.middleware.js';
 
 const categoryRoutes = express.Router();
 
 // Create S3 upload middleware for category images with aggressive compression
-const upload = getCategoryImageUploadMiddleware('categories'); // This will compress images by ~80%
+const upload = getImageUploadWithWebpMiddleware('categories'); // This will compress images by ~80%
 
 // Category CRUD routes
 categoryRoutes.post(

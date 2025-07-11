@@ -3,6 +3,7 @@ import User from './user.model.js';
 import Role from './role.model.js';
 import Permission from './permission.model.js';
 import Category from './category.model.js';
+import Product from './product.model.js';
 
 // Define associations
 Role.hasMany(User, {
@@ -25,6 +26,8 @@ Permission.belongsTo(Role, {
   as: 'role',
 });
 
+// Product-Category associations are defined in product.model.js
+
 // Export models and sequelize instance
 const db = {
   sequelize,
@@ -32,6 +35,7 @@ const db = {
   Role,
   Permission,
   Category,
+  Product,
 };
 
 export default db;

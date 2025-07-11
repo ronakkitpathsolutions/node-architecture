@@ -3,9 +3,9 @@ import { Common } from '../utils/validations/index.js';
 import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 const createValidationMiddleware = validationFunction => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     try {
-      const validationResult = validationFunction(req.body);
+      const validationResult = await validationFunction(req.body);
 
       if (!validationResult.success) {
         return res

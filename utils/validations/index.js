@@ -3,6 +3,7 @@ import * as UserValidation from './user.validation.js';
 import * as RoleValidation from './role.validation.js';
 import * as PermissionValidation from './permission.validation.js';
 import * as CategoryValidation from './category.validation.js';
+import * as ProductValidation from './product.validation.js';
 import * as CommonValidation from './common.validation.js';
 import ValidationMiddleware from './middleware.js';
 
@@ -60,6 +61,18 @@ export const Category = {
   },
   helpers: {
     generateSlug: CategoryValidation.generateSlug,
+  },
+};
+
+// Export all product validations
+export const Product = {
+  schemas: {
+    create: ProductValidation.CreateProductSchema,
+    update: ProductValidation.UpdateProductSchema,
+    partialUpdate: ProductValidation.PartialUpdateProductSchema,
+    updatePrice: ProductValidation.UpdateProductPriceSchema,
+    updateStock: ProductValidation.UpdateProductStockSchema,
+    updateStatus: ProductValidation.UpdateProductStatusSchema,
   },
 };
 
@@ -135,6 +148,7 @@ export {
   RoleValidation,
   PermissionValidation,
   CategoryValidation,
+  ProductValidation,
   CommonValidation,
   ValidationMiddleware,
 };
@@ -145,6 +159,7 @@ export const Validations = {
   Role,
   Permission,
   Category,
+  Product,
   Common,
   Middleware: ValidationMiddleware,
 };

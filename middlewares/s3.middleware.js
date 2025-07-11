@@ -147,7 +147,7 @@ const getCompressedUploadMiddleware = (folder = '', options = {}) => {
 };
 
 // Specialized middleware for category images with aggressive compression
-const getCategoryImageUploadMiddleware = (folder = 'categories') => {
+const getImageUploadWithWebpMiddleware = (folder = '') => {
   return getCompressedUploadMiddleware(folder, {
     imageQuality: 80, // Very aggressive compression for 70%+ reduction
     maxWidth: 600, // Smaller max width for category images
@@ -158,4 +158,4 @@ const getCategoryImageUploadMiddleware = (folder = 'categories') => {
 };
 
 export default getUploadMiddleware;
-export { getCompressedUploadMiddleware, getCategoryImageUploadMiddleware };
+export { getCompressedUploadMiddleware, getImageUploadWithWebpMiddleware };

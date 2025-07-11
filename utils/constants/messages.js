@@ -188,6 +188,66 @@ export const VALIDATION_MESSAGES = {
     },
   },
 
+  // Product validation messages
+  PRODUCT: {
+    NAME: {
+      REQUIRED: 'Product name is required',
+      TOO_SHORT: 'Product name must be at least 2 characters long',
+      TOO_LONG: 'Product name must not exceed 255 characters',
+      EMPTY: 'Product name cannot be empty',
+      INVALID_FORMAT: 'Product name contains invalid characters',
+    },
+    SLUG: {
+      REQUIRED: 'Slug is required',
+      TOO_SHORT: 'Slug must be at least 2 characters long',
+      TOO_LONG: 'Slug must not exceed 255 characters',
+      INVALID_FORMAT:
+        'Slug can only contain lowercase letters, numbers, and hyphens',
+      ALREADY_EXISTS: 'Slug already exists',
+    },
+    DESCRIPTION: {
+      TOO_LONG: 'Description must not exceed 5000 characters',
+    },
+    PRICE: {
+      REQUIRED: 'Price is required',
+      MUST_BE_POSITIVE: 'Price must be a positive number',
+      INVALID_DECIMAL: 'Price must have at most 2 decimal places',
+      TOO_HIGH: 'Price exceeds maximum allowed value',
+    },
+    STOCK: {
+      REQUIRED: 'Stock quantity is required',
+      MUST_BE_INTEGER: 'Stock must be a whole number',
+      MUST_BE_POSITIVE: 'Stock must be zero or positive',
+    },
+    IMAGE_URL: {
+      INVALID_URL: 'Image URL must be a valid URL',
+      TOO_LONG: 'Image URL must not exceed 255 characters',
+    },
+    CATEGORY_ID: {
+      REQUIRED: 'Category ID is required',
+      INVALID: 'Category ID must be a valid integer',
+      POSITIVE: 'Category ID must be a positive number',
+      NOT_FOUND: 'Category not found',
+    },
+    STATUS: {
+      REQUIRED: 'Status is required',
+      INVALID: 'Status must be active, inactive, or draft',
+    },
+    ID: {
+      REQUIRED: 'Product ID is required',
+      INVALID: 'Product ID must be a valid integer',
+      NOT_FOUND: 'Product not found',
+    },
+    GENERAL: {
+      NOT_FOUND: 'Product not found',
+      CREATION_FAILED: 'Failed to create product',
+      UPDATE_FAILED: 'Failed to update product',
+      DELETE_FAILED: 'Failed to delete product',
+      OUT_OF_STOCK: 'Product is out of stock',
+      INSUFFICIENT_STOCK: 'Insufficient stock available',
+    },
+  },
+
   // Common validation messages
   COMMON: {
     ID: {
