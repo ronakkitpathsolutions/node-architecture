@@ -1,4 +1,5 @@
 import { ZodError } from 'zod';
+import { VALIDATION_MESSAGES } from '../constants/messages.js';
 
 /**
  * Middleware factory for Zod validation
@@ -21,7 +22,7 @@ export const validate = (schema, source = 'body') => {
 
         return res.status(400).json({
           success: false,
-          message: 'Validation failed',
+          message: VALIDATION_MESSAGES.SYSTEM.VALIDATION_FAILED,
           errors,
         });
       }
@@ -91,7 +92,7 @@ export const validateMultiple = schemas => {
     if (errors.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
+        message: VALIDATION_MESSAGES.SYSTEM.VALIDATION_FAILED,
         errors,
       });
     }

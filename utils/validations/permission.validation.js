@@ -110,8 +110,11 @@ export const ValidateAccessSchema = z.object({
     .positive(VALIDATION_MESSAGES.COMMON.ID.POSITIVE),
 
   required_access: z.object({
-    action: z.string().min(1, 'Action is required'),
-    resource: z.string().min(1, 'Resource is required').optional(),
+    action: z.string().min(1, VALIDATION_MESSAGES.PERMISSION.ACTION.REQUIRED),
+    resource: z
+      .string()
+      .min(1, VALIDATION_MESSAGES.PERMISSION.RESOURCE.REQUIRED)
+      .optional(),
     context: z.record(z.string(), z.any()).optional(),
   }),
 });

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { ENV } from '../config/index.js';
+import { VALIDATION_MESSAGES } from './constants/messages.js';
 
 export const generateToken = (payload, expiresIn = ENV.JWT_EXPIRATION) => {
   try {
@@ -21,7 +22,7 @@ export const generateToken = (payload, expiresIn = ENV.JWT_EXPIRATION) => {
 export const verifyToken = token => {
   try {
     if (!token) {
-      throw new Error('Token is required');
+      throw new Error(VALIDATION_MESSAGES.AUTH.TOKEN.REQUIRED);
     }
 
     const decoded = jwt.verify(token, ENV.JWT_SECRET, {
@@ -34,7 +35,7 @@ export const verifyToken = token => {
     if (error.name === 'TokenExpiredError') {
       throw new Error('Token has expired');
     } else if (error.name === 'JsonWebTokenError') {
-      throw new Error('Invalid token');
+      throw new Error(VALIDATION_MESSAGES.AUTH.TOKEN.INVALID);
     } else if (error.name === 'NotBeforeError') {
       throw new Error('Token not active yet');
     }

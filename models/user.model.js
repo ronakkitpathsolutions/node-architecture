@@ -106,7 +106,7 @@ const User = sequelize.define(
       validate: {
         len: {
           args: [10, 255],
-          msg: 'Refresh token must be between 10 and 255 characters',
+          msg: VALIDATION_MESSAGES.AUTH.TOKEN.INVALID,
         },
       },
     },
@@ -180,7 +180,9 @@ const User = sequelize.define(
             const validationErrors = formatZodErrors(error);
 
             // Create a new error with the simple format
-            const validationError = new Error('Validation failed');
+            const validationError = new Error(
+              VALIDATION_MESSAGES.SYSTEM.VALIDATION_FAILED
+            );
             validationError.name = 'SequelizeValidationError';
             validationError.errors = validationErrors;
             throw validationError;

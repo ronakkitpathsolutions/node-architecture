@@ -152,6 +152,42 @@ export const VALIDATION_MESSAGES = {
     },
   },
 
+  // Category validation messages
+  CATEGORY: {
+    CATEGORY_NAME: {
+      REQUIRED: 'Category name is required',
+      TOO_SHORT: 'Category name must be at least 2 characters long',
+      TOO_LONG: 'Category name must not exceed 100 characters',
+      EMPTY: 'Category name cannot be empty',
+      INVALID_FORMAT: 'Category name contains invalid characters',
+      ALREADY_EXISTS: 'Category name already exists',
+    },
+    SLUG: {
+      REQUIRED: 'Slug is required',
+      TOO_SHORT: 'Slug must be at least 2 characters long',
+      TOO_LONG: 'Slug must not exceed 100 characters',
+      INVALID_FORMAT:
+        'Slug can only contain lowercase letters, numbers, and hyphens',
+      ALREADY_EXISTS: 'Slug already exists',
+    },
+    ID: {
+      REQUIRED: 'Category ID is required',
+      INVALID: 'Category ID must be a valid integer',
+      NOT_FOUND: 'Category not found',
+    },
+    CATEGORY_IMAGE: {
+      INVALID_URL: 'Category image must be a valid URL',
+      TOO_LONG: 'Category image URL must not exceed 500 characters',
+    },
+    GENERAL: {
+      NOT_FOUND: 'Category not found',
+      CREATION_FAILED: 'Failed to create category',
+      UPDATE_FAILED: 'Failed to update category',
+      DELETE_FAILED: 'Failed to delete category',
+      IN_USE: 'Category is currently in use and cannot be deleted',
+    },
+  },
+
   // Common validation messages
   COMMON: {
     ID: {

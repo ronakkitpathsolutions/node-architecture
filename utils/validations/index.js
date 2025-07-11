@@ -2,6 +2,7 @@
 import * as UserValidation from './user.validation.js';
 import * as RoleValidation from './role.validation.js';
 import * as PermissionValidation from './permission.validation.js';
+import * as CategoryValidation from './category.validation.js';
 import * as CommonValidation from './common.validation.js';
 import ValidationMiddleware from './middleware.js';
 
@@ -44,6 +45,21 @@ export const Role = {
     assign: RoleValidation.validateAssignRole,
     bulkAssign: RoleValidation.validateBulkAssignRole,
     permission: RoleValidation.validateRolePermission,
+  },
+};
+
+// Export all category validations
+export const Category = {
+  schemas: {
+    create: CategoryValidation.CreateCategorySchema,
+    update: CategoryValidation.UpdateCategorySchema,
+  },
+  validate: {
+    create: CategoryValidation.validateCreateCategory,
+    update: CategoryValidation.validateUpdateCategory,
+  },
+  helpers: {
+    generateSlug: CategoryValidation.generateSlug,
   },
 };
 
@@ -118,6 +134,7 @@ export {
   UserValidation,
   RoleValidation,
   PermissionValidation,
+  CategoryValidation,
   CommonValidation,
   ValidationMiddleware,
 };
@@ -127,6 +144,7 @@ export const Validations = {
   User,
   Role,
   Permission,
+  Category,
   Common,
   Middleware: ValidationMiddleware,
 };

@@ -3,6 +3,7 @@ import User from '../models/user.model.js';
 import { generateToken } from '../utils/jwt.js';
 import { sendEmail } from '../utils/mailer.js';
 import { generateRefreshToken } from '../utils/refreshToken.js';
+import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 export const login = asyncHandler(async (req, res) => {
   // Get validated data from middleware
@@ -14,7 +15,7 @@ export const login = asyncHandler(async (req, res) => {
   if (!user) {
     return res
       .status(401)
-      .json(createApiResponse(false, 'Invalid username or password'));
+      .json(createApiResponse(false, VALIDATION_MESSAGES.AUTH.LOGIN.FAILED));
   }
 
   // 3. Check if user is active
@@ -35,7 +36,7 @@ export const login = asyncHandler(async (req, res) => {
   if (!isPasswordValid) {
     return res
       .status(401)
-      .json(createApiResponse(false, 'Invalid username or password'));
+      .json(createApiResponse(false, VALIDATION_MESSAGES.AUTH.LOGIN.FAILED));
   }
 
   // 5. Generate JWT token
@@ -53,7 +54,7 @@ export const login = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'Login successful', token));
-}, 'Login failed');
+}, VALIDATION_MESSAGES.AUTH.LOGIN.FAILED);
 
 export const register = asyncHandler(async (req, res) => {
   // Get validated data from middleware
@@ -63,7 +64,9 @@ export const register = asyncHandler(async (req, res) => {
   if (existingUser) {
     return res
       .status(409)
-      .json(createApiResponse(false, 'User already exists with this email'));
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.AUTH.REGISTER.EMAIL_EXISTS)
+      );
   }
 
   // Generate refresh token
@@ -106,7 +109,7 @@ export const register = asyncHandler(async (req, res) => {
         token
       )
     );
-}, 'Registration failed');
+}, VALIDATION_MESSAGES.AUTH.REGISTER.FAILED);
 
 export const forgotPassword = asyncHandler(async (req, res) => {
   // Get validated data from middleware
@@ -116,7 +119,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   if (!existingUser) {
     return res
       .status(404)
-      .json(createApiResponse(false, 'User does not exist with this email'));
+      .json(createApiResponse(false, VALIDATION_MESSAGES.USER.EMAIL.NOT_FOUND));
   }
 
   // Generate new refresh token
@@ -143,7 +146,9 @@ export const resetPassword = asyncHandler(async (req, res) => {
   if (!user) {
     return res
       .status(404)
-      .json(createApiResponse(false, 'User not found or invalid token'));
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.AUTH.RESET.TOKEN_INVALID)
+      );
   }
 
   // Update user's password
@@ -166,7 +171,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'Password reset successful', token));
-}, 'Password reset failed');
+}, VALIDATION_MESSAGES.AUTH.RESET.FAILED);
 
 export const getUserProfile = async () => {
   // Function logic will be implemented here
@@ -178,7 +183,9 @@ export const verifyUser = asyncHandler(async (req, res) => {
   if (!refresh_token) {
     return res
       .status(400)
-      .json(createApiResponse(false, 'Verification token is required'));
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.AUTH.RESET.TOKEN_REQUIRED)
+      );
   }
 
   // Find user by refresh token
@@ -187,7 +194,9 @@ export const verifyUser = asyncHandler(async (req, res) => {
   if (!user) {
     return res
       .status(404)
-      .json(createApiResponse(false, 'User not found or invalid token'));
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.AUTH.RESET.TOKEN_INVALID)
+      );
   }
 
   // Update user to be active and clear refresh token
@@ -221,7 +230,11 @@ export const resendVerification = asyncHandler(async (req, res) => {
   const { email } = req.validatedData;
   const user = await User.findByEmail(email);
   if (!user) {
-    return res.status(404).json(createApiResponse(false, 'User not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.USER.GENERAL.NOT_FOUND)
+      );
   }
   if (user.is_active) {
     return res

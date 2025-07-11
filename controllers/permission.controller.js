@@ -5,6 +5,7 @@ import {
   mergeAccessPermissions,
   validateAccessUpdates,
 } from '../utils/helper.js';
+import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 export const getPermission = asyncHandler(async (req, res) => {
   // Get validated role ID from middleware (params)
@@ -54,4 +55,4 @@ export const updatePermission = asyncHandler(async (req, res) => {
     .json(
       createApiResponse(true, 'Permission updated successfully', permission)
     );
-}, 'Failed to update permission');
+}, VALIDATION_MESSAGES.PERMISSION.GENERAL.UPDATE_FAILED);

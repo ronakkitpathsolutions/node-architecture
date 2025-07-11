@@ -1,5 +1,6 @@
 import Role from '../models/role.model.js';
 import { createApiResponse, asyncHandler } from '../utils/helper.js';
+import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 export const createRole = asyncHandler(async (req, res) => {
   // Get validated data from middleware
@@ -12,7 +13,7 @@ export const createRole = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(createApiResponse(true, 'Role created successfully', role));
-}, 'Failed to create role');
+}, VALIDATION_MESSAGES.ROLE.GENERAL.CREATION_FAILED);
 
 export const getRole = asyncHandler(async (req, res) => {
   // Get validated ID from middleware
@@ -22,7 +23,11 @@ export const getRole = asyncHandler(async (req, res) => {
   const role = await Role.findByPk(roleId);
 
   if (!role) {
-    return res.status(404).json(createApiResponse(false, 'Role not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.ROLE.GENERAL.NOT_FOUND)
+      );
   }
 
   // 3. Return role data
@@ -50,7 +55,11 @@ export const updateRole = asyncHandler(async (req, res) => {
   const role = await Role.findByPk(roleId);
 
   if (!role) {
-    return res.status(404).json(createApiResponse(false, 'Role not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.ROLE.GENERAL.NOT_FOUND)
+      );
   }
 
   // 4. Update role data
@@ -60,7 +69,7 @@ export const updateRole = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'Role updated successfully', role));
-}, 'Failed to update role');
+}, VALIDATION_MESSAGES.ROLE.GENERAL.UPDATE_FAILED);
 
 export const deleteRole = asyncHandler(async (req, res) => {
   // Get validated ID from middleware
@@ -70,7 +79,11 @@ export const deleteRole = asyncHandler(async (req, res) => {
   const role = await Role.findByPk(roleId);
 
   if (!role) {
-    return res.status(404).json(createApiResponse(false, 'Role not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.ROLE.GENERAL.NOT_FOUND)
+      );
   }
 
   // 3. Delete the role
@@ -80,4 +93,4 @@ export const deleteRole = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'Role deleted successfully'));
-}, 'Failed to delete role');
+}, VALIDATION_MESSAGES.ROLE.GENERAL.DELETE_FAILED);

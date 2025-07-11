@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { ENV } from '../config/index.js';
+import { VALIDATION_MESSAGES } from './constants/messages.js';
 
 export const sendEmail = async ({ to, subject, html }) => {
   // Configure your SMTP transport here
@@ -29,8 +30,6 @@ export const sendEmail = async ({ to, subject, html }) => {
     // Log the error for debugging
     console.error('Error sending email:', error);
     // Optionally, you can throw a custom error or return a user-friendly message
-    throw new Error(
-      'Failed to send email. Please check SMTP configuration and network.'
-    );
+    throw new Error(VALIDATION_MESSAGES.SYSTEM.SERVER_ERROR);
   }
 };

@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import { createApiResponse, asyncHandler } from '../utils/helper.js';
+import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 export const createUser = asyncHandler(async (req, res) => {
   // Get validated data from middleware
@@ -12,7 +13,7 @@ export const createUser = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(createApiResponse(true, 'User created successfully', user));
-}, 'Failed to create user');
+}, VALIDATION_MESSAGES.USER.GENERAL.CREATION_FAILED);
 
 export const getUser = asyncHandler(async (req, res) => {
   // Get validated ID from middleware
@@ -22,7 +23,11 @@ export const getUser = asyncHandler(async (req, res) => {
   const user = await User.findByPk(userId);
 
   if (!user) {
-    return res.status(404).json(createApiResponse(false, 'User not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.USER.GENERAL.NOT_FOUND)
+      );
   }
 
   // 3. Return user data
@@ -45,7 +50,11 @@ export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findByPk(userId);
 
   if (!user) {
-    return res.status(404).json(createApiResponse(false, 'User not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.USER.GENERAL.NOT_FOUND)
+      );
   }
 
   // 4. Update user data
@@ -55,7 +64,7 @@ export const updateUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'User updated successfully', user));
-}, 'Failed to update user');
+}, VALIDATION_MESSAGES.USER.GENERAL.UPDATE_FAILED);
 
 export const getAllUsers = asyncHandler(async (req, res) => {
   // Extract query parameters directly
@@ -99,7 +108,11 @@ export const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findByPk(userId);
 
   if (!user) {
-    return res.status(404).json(createApiResponse(false, 'User not found'));
+    return res
+      .status(404)
+      .json(
+        createApiResponse(false, VALIDATION_MESSAGES.USER.GENERAL.NOT_FOUND)
+      );
   }
 
   // 3. Delete the user
@@ -109,4 +122,4 @@ export const deleteUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(createApiResponse(true, 'User deleted successfully'));
-}, 'Failed to delete user');
+}, VALIDATION_MESSAGES.USER.GENERAL.DELETE_FAILED);

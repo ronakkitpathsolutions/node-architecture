@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 import { Role as RoleValidation } from '../utils/validations/index.js';
 import { validateWithZod } from '../utils/helper.js';
+import { VALIDATION_MESSAGES } from '../utils/constants/messages.js';
 
 const Role = sequelize.define(
   'Role',
@@ -16,15 +17,15 @@ const Role = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: {
-        msg: 'Role name already exists',
+        msg: VALIDATION_MESSAGES.ROLE.NAME.ALREADY_EXISTS,
       },
       validate: {
         notEmpty: {
-          msg: 'Role name cannot be empty',
+          msg: VALIDATION_MESSAGES.ROLE.NAME.EMPTY,
         },
         len: {
           args: [2, 50],
-          msg: 'Role name must be between 2 and 50 characters',
+          msg: VALIDATION_MESSAGES.ROLE.NAME.TOO_LONG,
         },
       },
     },

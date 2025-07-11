@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import logger from './logger.js';
+import { VALIDATION_MESSAGES } from './constants/messages.js';
 
 export const formatZodErrors = zodError => {
   const errors = {};
@@ -43,7 +44,7 @@ export const validateWithZod = (schema, data) => {
     }
   } catch (err) {
     return createValidationResult(false, null, {
-      general: err.message || 'Validation failed',
+      general: err.message || VALIDATION_MESSAGES.SYSTEM.VALIDATION_FAILED,
     });
   }
 };
@@ -276,7 +277,10 @@ export const validateAccessUpdates = accessUpdates => {
   return { isValid: true };
 };
 
-export const asyncHandler = (fn, errorMessage = 'Operation failed') => {
+export const asyncHandler = (
+  fn,
+  errorMessage = VALIDATION_MESSAGES.SYSTEM.SERVER_ERROR
+) => {
   return async (req, res, next) => {
     try {
       await fn(req, res, next);
