@@ -20,7 +20,7 @@ import { getCategoryImageUploadMiddleware } from '../middlewares/s3.middleware.j
 const categoryRoutes = express.Router();
 
 // Create S3 upload middleware for category images with aggressive compression
-const upload = getCategoryImageUploadMiddleware(); // This will compress images by ~70%
+const upload = getCategoryImageUploadMiddleware('categories'); // This will compress images by ~80%
 
 // Category CRUD routes
 categoryRoutes.post(

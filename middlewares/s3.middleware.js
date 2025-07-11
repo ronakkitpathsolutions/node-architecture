@@ -33,7 +33,7 @@ const getUploadMiddleware = (folder = '') => {
 // Enhanced upload middleware with actual image compression
 const getCompressedUploadMiddleware = (folder = '', options = {}) => {
   const {
-    imageQuality = 30, // Aggressive compression for 70% reduction
+    imageQuality = 80, // Aggressive compression for 80% reduction
     maxWidth = 1920,
     maxHeight = 1080,
     maxFileSize = 10 * 1024 * 1024, // 10MB default
@@ -149,11 +149,11 @@ const getCompressedUploadMiddleware = (folder = '', options = {}) => {
 // Specialized middleware for category images with aggressive compression
 const getCategoryImageUploadMiddleware = (folder = 'categories') => {
   return getCompressedUploadMiddleware(folder, {
-    imageQuality: 70, // Very aggressive compression for 70%+ reduction
+    imageQuality: 80, // Very aggressive compression for 70%+ reduction
     maxWidth: 600, // Smaller max width for category images
     maxHeight: 450, // Smaller max height for category images
     maxFileSize: 15 * 1024 * 1024, // 15MB limit
-    useAggressiveCompression: true,
+    useAggressiveCompression: false,
   });
 };
 

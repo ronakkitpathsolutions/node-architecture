@@ -9,7 +9,7 @@ export const aggressiveCompressImage = async (buffer, options = {}) => {
 
   try {
     const originalSize = buffer.length;
-    let quality = 20; // Start with very low quality
+    let quality = 80; // Start with very low quality
     let processedBuffer;
     let attempts = 0;
     const maxAttempts = 10;
