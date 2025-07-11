@@ -25,7 +25,7 @@ const upload = getCategoryImageUploadMiddleware(); // This will compress images 
 // Category CRUD routes
 categoryRoutes.post(
   '/categories/create',
-  [createCategoryValidationMiddleware, upload.single('category_image')],
+  [upload.single('category_image'), createCategoryValidationMiddleware],
   createCategory
 );
 categoryRoutes.get('/categories', getAllCategories);
@@ -34,8 +34,8 @@ categoryRoutes.patch(
   '/categories/:id',
   [
     idValidationMiddleware,
-    updateCategoryValidationMiddleware,
     upload.single('category_image'),
+    updateCategoryValidationMiddleware,
   ],
   updateCategory
 );

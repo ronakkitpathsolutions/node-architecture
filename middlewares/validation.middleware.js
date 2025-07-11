@@ -73,18 +73,16 @@ const createSlugValidationMiddleware = (paramName = 'slug') => {
 
       // Validate slug format
       if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
-        return res
-          .status(400)
-          .json(
-            createApiResponse(
-              false,
-              VALIDATION_MESSAGES.CATEGORY.SLUG.INVALID_FORMAT,
-              null,
-              {
-                slug: 'Slug can only contain lowercase letters, numbers, and hyphens',
-              }
-            )
-          );
+        return res.status(400).json(
+          createApiResponse(
+            false,
+            VALIDATION_MESSAGES.CATEGORY.SLUG.INVALID_FORMAT,
+            null,
+            {
+              slug: 'Slug can only contain lowercase letters, numbers, and hyphens',
+            }
+          )
+        );
       }
 
       // Add validated slug to request object
